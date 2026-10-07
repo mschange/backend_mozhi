@@ -1,0 +1,44 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mo-zhi-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: <mysql-root-password>
+      MYSQL_DATABASE: mo_zhi
+      MYSQL_USER: mozhi
+      MYSQL_PASSWORD: <mysql-password>
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p<mysql-root-password>"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: mo-zhi-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mo_zhi_checkpoint
+      POSTGRES_USER: mozhi
+      POSTGRES_PASSWORD: <postgres-password>
+      TZ: Asia/Shanghai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mozhi -d mo_zhi_checkpoint"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  mysql_data:
+  postgres_data:

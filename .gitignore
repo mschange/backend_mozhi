@@ -1,0 +1,12 @@
+01.md
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+uploads/
+logs/
+milvus.db
+.env
+*.egg-info/
+dist/
+build/
